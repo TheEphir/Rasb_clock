@@ -1,59 +1,44 @@
 package main
 
 import (
-	"fmt"
+	"image/color"
 	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 )
 
-func updateTime(clock *widget.Label) {
-	var formatted string
-	hour := time.Now().Hour()
-
-	minute := time.Now().Minute()
-	if minute < 10 {
-		formatted = fmt.Sprintf("%v:0%v", hour, minute)
-	} else {
-		formatted = fmt.Sprintf("%v:%v", hour, minute)
-	}
-
-	clock.SetText(formatted)
-}
-
-func updateDate(curentDate *widget.Label) {
-	yearDay := time.Now().YearDay()
-	month := time.Now().Month()
-	year := time.Now().Year()
-
-	res := fmt.Sprintf("%v %v %v", yearDay, month, year)
-
-	curentDate.SetText(res)
+func updateTime(curTime *canvas.Text) {
+	curTime.Text = time.Now().Format("15:04:05")
+	curTime.Refresh()
 }
 
 func main() {
 	a := app.New()
-	w := a.NewWindow("Clock")
-	w.Resize(fyne.NewSize(800, 600))
+	w := a.NewWindow("Clock test")
+	w.Resize(fyne.NewSize(1024, 600))
 
-	clock := widget.NewLabel("")
-	clock.Resize(fyne.NewSize(800, 500))
-	updateTime(clock)
+	curTime := canvas.NewText(time.Now().Format("15:04:05"), color.Black)
+	curTime.TextStyle = fyne.TextStyle{Symbol: true, Bold: true}
+	curTime.TextSize = 250 // |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+	curTime.Move(fyne.NewPos(0, 0))
 
-	curentDate := widget.NewLabel("")
-	curentDate.Move(fyne.NewPos(1, 500))
-	updateDate(curentDate)
+	curDate := canvas.NewText(time.Now().Format("Mon 02/Jan"), color.Black)
+	curDate.TextSize = 60
+	curDate.Move(fyne.NewPos(0, 400))
 
-	w.SetContent(container.NewWithoutLayout(clock, curentDate))
+	w.SetContent(container.NewWithoutLayout(curTime, curDate))
+
 	go func() {
-		for range time.Tick(time.Minute) {
-			updateTime(clock)
-			updateDate(curentDate)
+		for {
+			time.Sleep(time.Second)
+			updateTime(curTime)
 		}
 	}()
 
+	// cTime := time.Now().Format("15:04")
+	// cDate := time.Now().Format("Mon 02/Jan")
 	w.ShowAndRun()
 }
