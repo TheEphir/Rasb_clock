@@ -26,6 +26,7 @@ def update_weather():
     weather_label.config(text=res)
     root.after(3600000, update_weather)
     
+# def to_dark_mode():
 
 root = tk.Tk()
 root.title("Часы")
@@ -42,8 +43,10 @@ time_label = tk.Label(root, font=font_time, fg="black")
 time_label.pack()
 time_label.config(background="#404040")
 
+# ===================== BOTTOM THINGS ========================
 frame = tk.Frame(root)
 frame.pack()
+frame.config(background="#404040")
 
 date_label = tk.Label(frame, font=font_date, fg="black")
 date_label.pack(side=tk.LEFT)
@@ -55,6 +58,7 @@ weekday_label.config(background="#404040")
 
 weather_label = tk.Label(frame, font=font_weather, fg="black")
 weather_label.pack(side=tk.LEFT, padx=20)
+weather_label.config(background="#404040")
 
 update_time()
 update_weather()
