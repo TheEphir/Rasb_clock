@@ -13,10 +13,7 @@ def update_time():
     date_label.config(text=current_date)
     weekday_label.config(text=current_weekday[:3])
     
-    if int(current_time[:2]) > 22:
-        to_dark_mode(True)
-    else:
-        to_dark_mode(False)
+    to_dark_mode(int(current_time[:2]))
     
     root.after(1000, update_time)
     
@@ -32,8 +29,8 @@ def update_weather():
     root.after(3600000, update_weather)
     
     
-def to_dark_mode(go_dark:bool):
-    if go_dark:
+def to_dark_mode(time):
+    if time > 22:
         root.config(background="#404040")
         time_label.config(background="#404040")
         
@@ -41,7 +38,7 @@ def to_dark_mode(go_dark:bool):
         date_label.config(background="#404040")
         weekday_label.config(background="#404040")
         weather_label.config(background="#404040")
-    else:
+    elif time > 8:
         root.config(background="white")
         time_label.config(background="white")
         
@@ -49,6 +46,8 @@ def to_dark_mode(go_dark:bool):
         date_label.config(background="white")
         weekday_label.config(background="white")
         weather_label.config(background="white")
+    else:
+        return
         
         
     
