@@ -1,64 +1,63 @@
+# DARK MODE
+# work with grid system
+
 import tkinter as tk
+from datetime import datetime
+import calendar
 import requests
-import cairosvg
-from PIL import Image, ImageTk
-from io import BytesIO
-from bs4 import BeautifulSoup
 
-IMAGES = [
-    "https://static.vecteezy.com/system/resources/previews/008/296/267/non_2x/colorful-swirl-logo-design-concept-illustration-vector.jpg",
-    "https://img.freepik.com/free-vector/bird-colorful-logo-gradient-vector_343694-1365.jpg",
-    "https://png.pngtree.com/png-clipart/20190611/original/pngtree-wolf-logo-png-image_2306634.jpg",
-    "https://img.freepik.com/free-vector/quill-pen-logo-template_23-2149852429.jpg?semt=ais_hybrid",
-    ]
-
-INDEX = 0
-
-def update_weather_img_url():
-    w_url = "https://www.wunderground.com/hourly/ua/kyiv"
+def update_time():
+    current_time = datetime.now().strftime("%H:%M:%S")
+    current_date = datetime.now().strftime("%d/%m")
+    current_weekday = calendar.day_name[datetime.now().weekday()]
+    
+    time_label.config(text=current_time)
+    date_label.config(text=current_date)
+    weekday_label.config(text=current_weekday[:3])
+    
+    root.after(1000, update_time)
+    
+def update_weather():
     try:
-        markup = requests.get(w_url).text
-        soup = BeautifulSoup(markup, features="html.parser")
-        res = soup.find(name="div", class_="small-2 columns fct-icon").findChild("img")["src"]
-        svg_data = requests.get(f"http://{res [6:]}").content
-        png_image = cairosvg.svg2png(svg_data)
-        png_bytes = BytesIO(png_image)
-        image = Image.open(png_bytes)
+        weather = requests.get(url="https://wttr.in/kyiv", params="format=1").text
     except:
-        image = Image.open("./a.jpg")
-    return image
-
-
-
-def test():
-    try:
-        w_url = "https://www.wunderground.com/hourly/ua/kyiv"
-        markup = requests.get(w_url).text
-        soup = BeautifulSoup(markup, features="html.parser")
-        res = soup.find(name="div", class_="small-2 columns fct-icon").findChild("img")["src"]
-        img_url = f"http://{res [6:]}" 
-        png_image = cairosvg.svg2png(url=img_url)
-        png_bytes = BytesIO(png_image)
-        image = Image.open(png_bytes)
-        return ImageTk.PhotoImage(image)
-        #weather_img_label.config(image=tk_image)
-    except:
-        return
-
+        weather = "❌"
+    
+    res = f"{weather[0]}\n{weather[5:]}"
+    weather_label.config(text=res)
+    root.after(3600000, update_weather)
+    
 
 root = tk.Tk()
-
 root.title("Часы")
 root.geometry("1000x550")
 root.resizable(True, True)
+root.config(background="#404040")
 
-png_image = cairosvg.svg2png(url=update_weather_img_url())
-tk_image = ImageTk.PhotoImage(update_weather_img_url())
+font_time = ("Helvetica", 190, "bold") 
+font_date = ("Helvetica", 80)
+font_weather = ("Helvetica", 60)
 
-weather_img_label = tk.Label(root, image=tk_image)
-weather_img_label.pack()
 
-#test()
+time_label = tk.Label(root, font=font_time, fg="black")
+time_label.pack()
+time_label.config(background="#404040")
+
+frame = tk.Frame(root)
+frame.pack()
+
+date_label = tk.Label(frame, font=font_date, fg="black")
+date_label.pack(side=tk.LEFT)
+date_label.config(background="#404040", highlightcolor="#404040")
+
+weekday_label = tk.Label(frame, font=font_date, fg="black")
+weekday_label.pack(side=tk.LEFT, padx=80)
+weekday_label.config(background="#404040")
+
+weather_label = tk.Label(frame, font=font_weather, fg="black")
+weather_label.pack(side=tk.LEFT, padx=20)
+
+update_time()
+update_weather()
 
 root.mainloop()
-
