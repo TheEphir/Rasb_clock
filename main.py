@@ -1,5 +1,3 @@
-# DARK MODE
-
 import tkinter as tk
 from datetime import datetime
 import calendar
@@ -55,7 +53,7 @@ def to_dark_mode(go_dark:bool):
         
     
 root = tk.Tk()
-root.title("Часы")
+root.title("Clock")
 root.geometry("1000x550")
 root.resizable(True, True)
 
