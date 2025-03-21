@@ -19,10 +19,10 @@ def update_time():
 def update_weather():
     try:
         weather = requests.get(url="https://wttr.in/kyiv", params="format=1").text
+        res = f"\n{weather[5:]}"
     except:
-        weather = "❌"
+        res = "❌"
     
-    res = f"\n{weather[5:]}"
     weather_label.config(text=res)
     root.after(3600000, update_weather)
     
@@ -30,7 +30,7 @@ def update_weather():
 def to_dark_mode():
     current_time = datetime.now().strftime("%H:%M:%S")
     res = int(current_time[:2])
-    if res >= 22 or res <=8:
+    if res >= 23 or res <=7:
         root.config(background="#404040")
         time_label.config(background="#404040")
         frame.config(background="#404040")
@@ -54,8 +54,8 @@ root.geometry("1000x550")
 root.resizable(True, True)
 
 font_time = ("Helvetica", 190, "bold") 
-font_date = ("Helvetica", 80)
-font_weather = ("Helvetica", 60)
+font_date = ("Helvetica", 90)
+font_weather = ("Helvetica", 90)
 
 
 time_label = tk.Label(root, font=font_time, fg="black")
