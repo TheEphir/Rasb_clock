@@ -31,7 +31,7 @@ def update_weather():
     
     
 def to_dark_mode(res):
-    if res >= 13 or res <=7:
+    if res >= 23 or res <=7:
         root.config(background="#404040")
         time_label.config(background="#404040")
         frame.config(background="#404040")
