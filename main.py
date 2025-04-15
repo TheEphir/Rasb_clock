@@ -8,11 +8,14 @@ def update_time():
     current_time = datetime.now().strftime("%H:%M:%S")
     current_date = datetime.now().strftime("%d/%m")
     current_weekday = calendar.day_name[datetime.now().weekday()]
-    
+
+    res = int(current_time[:2])
+    to_dark_mode(res)
+
     time_label.config(text=current_time)
     date_label.config(text=current_date)
     weekday_label.config(text=current_weekday[:3])
-    
+        
     root.after(1000, update_time)
     
     
@@ -27,10 +30,8 @@ def update_weather():
     root.after(3600000, update_weather)
     
     
-def to_dark_mode():
-    current_time = datetime.now().strftime("%H:%M:%S")
-    res = int(current_time[:2])
-    if res >= 23 or res <=7:
+def to_dark_mode(res):
+    if res >= 13 or res <=7:
         root.config(background="#404040")
         time_label.config(background="#404040")
         frame.config(background="#404040")
@@ -44,7 +45,6 @@ def to_dark_mode():
         date_label.config(background="#ffffff")
         weekday_label.config(background="#ffffff")
         weather_label.config(background="#ffffff")
-    root.after(1000, to_dark_mode)
         
         
     
@@ -76,6 +76,5 @@ weather_label.pack(side=tk.LEFT, padx=20)
 
 update_time()
 update_weather()
-root.command(to_dark_mode())
 
 root.mainloop()
